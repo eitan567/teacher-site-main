@@ -64,7 +64,7 @@ const GamePlay = React.memo(({
   const isCurrentPlayer = currentPlayer?.id === socket?.id;
 
   return (
-    <div className="flex justify-center items-start min-h-screen w-full mx-2">
+    <div className="flex justify-center items-start min-h-screen w-full mt-10">
       <ThemedCard>
         <div className="flex justify-center items-center mb-4">          
           <div className="">
@@ -98,7 +98,7 @@ const Lobby = React.memo(({
 }) => {
   const { theme } = useTheme();
   return (
-    <div className="flex justify-center items-start min-h-screen w-full mx-2">
+    <div className="flex justify-center items-start min-h-screen w-full mt-10">
       <ThemedCard>
         <div className="flex justify-center mb-4">          
           <div className="m-0">
@@ -145,9 +145,9 @@ const WaitingRoom = React.memo(({
 }) => {
   const { theme } = useTheme();
   return (
-    <div className="flex justify-center items-start min-h-screen w-full mx-2">
+    <div className="flex justify-center items-start min-h-screen w-full mt-10">
       <ThemedCard>
-        <div className="flex mb-4">          
+        <div className="flex flex-row justify-center w-full mb-4">          
           <div className="m-0">
             <h2 className={`text-md font-semibold leading-7 mb-4 ${theme.text}`}>חדר המתנה</h2>
             <p className={`text-base leading-6 ${theme.textSecondary}`}>קוד המשחק: {gameCode}</p>
@@ -174,6 +174,23 @@ const WaitingRoom = React.memo(({
   );
 });
 
+const ThemeSelector = React.memo(({ themes, currentTheme, onThemeChange }) => {
+  return (
+    <div className="relative flex flex-row justify-center bg-white rounded-b-md border border-[#0f172a4f] p-2.5 w-max mx-auto">
+      {Object.values(themes).map((theme) => (
+        <button
+          key={theme.name}
+          className={`w-6 h-6 rounded-full ml-2 ring-1 ring-gray-300 ${theme.background} ${
+            currentTheme.name === theme.name ? 'ring-1 ring-gray-400' : ''
+          }`}
+          onClick={() => onThemeChange(theme)}
+          aria-label={`Switch to ${theme.name} theme`}
+        />
+      ))}
+    </div>
+  );
+});
+
 const NetworkedTriviaGame = () => {
   const [socket, setSocket] = useState(null);
   const [gameState, setGameState] = useState('setup');
@@ -185,7 +202,7 @@ const NetworkedTriviaGame = () => {
   const [playerName, setPlayerName] = useState('');
   const [isCreatingGame, setIsCreatingGame] = useState(false);
   const [createGameError, setCreateGameError] = useState('');
-  const { theme, toggleTheme } = useTheme();
+  const { theme, setTheme, themes } = useTheme();
 
   const timerRef = useRef(null);
 
@@ -354,14 +371,11 @@ const NetworkedTriviaGame = () => {
         );
       case 'finished':
         return (
-          <div className="flex justify-center items-start min-h-screen w-full mx-2">
+          <div className="flex justify-center items-start min-h-screen w-full mt-10">
             <ThemedCard>
-              <div className="flex mb-4">
-                <svg className="h-14 w-14 flex-none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  {/* SVG content here */}
-                </svg>
-                <div className="ml-4">
-                  <h2 className={`text-base font-semibold leading-7 ${theme.text}`}>המשחק הסתיים!</h2>
+              <div className="flex flex-row justify-center w-full mb-4">                
+                <div className="ml-0">
+                  <h2 className={`text-lg font-bold leading-7 mb-4 ${theme.text}`}>המשחק הסתיים!</h2>
                   <p className={`text-sm leading-6 ${theme.textSecondary}`}>תוצאות סופיות</p>
                 </div>
               </div>
@@ -370,15 +384,15 @@ const NetworkedTriviaGame = () => {
                 const winners = players.filter(p => p.score === maxScore);
                 if (winners.length === 1) {
                   shootConfetti();
-                  return <div className={`text-base font-semibold leading-7 ${theme.text} mb-4`}>המנצח: {winners[0].name}</div>;
+                  return <div className={`text-base font-bold leading-7 ${theme.text} mb-4`}>המנצח: {winners[0].name}</div>;
                 } else {
                   return <div className={`text-base font-semibold leading-7 ${theme.text} mb-4`}>תיקו בין: {winners.map(w => w.name).join(', ')}</div>;
                 }
               })()}
-              <div className={`text-sm leading-6 ${theme.textSecondary} mb-4`}>ניקוד סופי:</div>
+              <div className={`text-sm leading-6 ${theme.textSecondary} mb-2`}>ניקוד סופי:</div>
               {players.map((player, index) => (
                 <div key={index} className={`text-sm leading-6 ${theme.textSecondary} mb-2`}>
-                  השחקן {player.name}: <span className='font-semibold pr-2'>{player.score} נקודות.</span>
+                  השחקן {player.name}: <span className='font-bold pr-2'>{player.score} נקודות.</span>
                 </div>
               ))}
               <div className="mt-8">
@@ -393,8 +407,8 @@ const NetworkedTriviaGame = () => {
   };
 
   return (
-    <div className={`${theme.text} min-h-screen w-full sm:w-[350px] mx-auto`}>
-      <ThemedButton onClick={toggleTheme} className="m-1">Toggle Theme</ThemedButton>
+    <div className={`${theme.text} min-h-screen w-full sm:w-[350px] mx-auto relative mt-0`}>
+      <ThemeSelector themes={themes} currentTheme={theme} onThemeChange={setTheme} />
       {renderContent()}
     </div>
   );
