@@ -10,7 +10,7 @@ import { useTheme } from './contexts/ThemeContext';
 // Memoized Timer Component
 const Timer = React.memo(({ timeLeft }) => {
   const { theme } = useTheme();
-  return <div className={`text-[2.5rem] leading-none ${theme.text} font-bold mb-2`}>זמן נותר: {timeLeft} שניות</div>;
+  return <div className={`text-base leading-none ${theme.textSecondary} font-semibold`}>זמן נותר: {timeLeft} שניות</div>;
 });
 
 // Memoized Question Component
@@ -18,7 +18,7 @@ const Question = React.memo(({ question, onAnswer, isCurrentPlayer, timeLeft }) 
   const { theme } = useTheme();
   return (
     <>
-      <div className={`text-sm leading-6 ${theme.textSecondary} mb-6`}>{question?.text}</div>
+      <div className={`text-lg leading-6 font-bold ${theme.text} flex flex-col justify-center items-center h-[70px]`}>{question?.text}</div>
       {question?.answers.map((answer, index) => (
         <ThemedButton
           key={index}
@@ -37,13 +37,13 @@ const Question = React.memo(({ question, onAnswer, isCurrentPlayer, timeLeft }) 
 const ScoreBoard = React.memo(({ players }) => {
   const { theme } = useTheme();
   return (
-    <div className={`mt-8 border-t ${theme.border} pt-4 w-full`}>
-      <h3 className={`text-base font-semibold leading-7 ${theme.text} mb-2`}>ניקוד</h3>
-      <div className="flex flex-wrap justify-between">
+    <div className={`mt-2 border-t pt-2 w-full h-[40px]`}>
+      <h3 className={`text-base font-semibold leading-7 ${theme.text} mb-2 relative mx-auto ${theme.background} top-[-23px] w-[53px]`}>ניקוד</h3>
+      <div className="flex flex-wrap justify-between relative top-[-34px]">
         {players.map((player, index) => (
           <div key={index} className="text-center mb-2 w-1/2 sm:w-auto">
             <div className={`text-sm ${theme.textSecondary}`}>{player.name}</div>
-            <div className={`text-[2.5rem] leading-none ${theme.text} font-bold`}>{player.score}</div>
+            <div className={`text-[1.5rem] leading-none ${theme.text} font-bold`}>{player.score}</div>
           </div>
         ))}
       </div>
@@ -64,14 +64,11 @@ const GamePlay = React.memo(({
   const isCurrentPlayer = currentPlayer?.id === socket?.id;
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center items-start min-h-screen w-full mx-2">
       <ThemedCard>
-        <div className="flex mb-4">
-          <svg className="h-14 w-14 flex-none" fill="none" xmlns="http://www.w3.org/2000/svg">
-            {/* SVG content here */}
-          </svg>
-          <div className="ml-4">
-            <h2 className={`text-base font-semibold leading-7 ${theme.text}`}>טריוויה רשת</h2>
+        <div className="flex justify-center items-center mb-4">          
+          <div className="">
+            <h2 className={`text-xl font-bold leading-7 ${theme.text}`}>טריוויה רשת</h2>
             <p className={`text-sm leading-6 ${theme.textSecondary}`}>תור: {currentPlayer?.name}</p>
           </div>
         </div>
@@ -101,7 +98,7 @@ const Lobby = React.memo(({
 }) => {
   const { theme } = useTheme();
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center items-start min-h-screen w-full mx-2">
       <ThemedCard>
         <div className="flex justify-center mb-4">          
           <div className="m-0">
@@ -121,7 +118,7 @@ const Lobby = React.memo(({
           onChange={(e) => setGameCode(e.target.value)}
           className="mb-4"
         />
-        {createGameError && <div className="text-red-500 mb-2">{createGameError}</div>}
+        {createGameError && <div className="text-red-500 mb-2 text-base">{createGameError}</div>}
         <ThemedButton 
           onClick={createGame} 
           className="w-full mb-4"
@@ -148,7 +145,7 @@ const WaitingRoom = React.memo(({
 }) => {
   const { theme } = useTheme();
   return (
-    <div className="flex justify-center items-center min-h-screen p-4">
+    <div className="flex justify-center items-start min-h-screen w-full mx-2">
       <ThemedCard>
         <div className="flex mb-4">          
           <div className="m-0">
@@ -357,7 +354,7 @@ const NetworkedTriviaGame = () => {
         );
       case 'finished':
         return (
-          <div className="flex justify-center items-center min-h-screen p-4">
+          <div className="flex justify-center items-start min-h-screen w-full mx-2">
             <ThemedCard>
               <div className="flex mb-4">
                 <svg className="h-14 w-14 flex-none" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -396,8 +393,8 @@ const NetworkedTriviaGame = () => {
   };
 
   return (
-    <div className={`${theme.text} min-h-screen w-full sm:w-[850px] mx-auto`}>
-      <ThemedButton onClick={toggleTheme} className="m-4">Toggle Theme</ThemedButton>
+    <div className={`${theme.text} min-h-screen w-full sm:w-[350px] mx-auto`}>
+      <ThemedButton onClick={toggleTheme} className="m-1">Toggle Theme</ThemedButton>
       {renderContent()}
     </div>
   );

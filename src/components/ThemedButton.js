@@ -6,7 +6,7 @@ export const ThemedButton = ({ children, className = '', ...props }) => {
   
   return (
     <button 
-      className={`${theme.button} ${theme.text} text-base font-semibold py-2 px-3 rounded-lg ${className}`}
+      className={`${theme.button} ${theme.buttonTextColor} text-base font-semibold py-2 px-3 rounded-lg ${className}`}
       {...props}
     >
       {children}

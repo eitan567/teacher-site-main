@@ -5,8 +5,8 @@ export const ThemedCard = ({ children, className = '' }) => {
   const { theme } = useTheme();
   
   return (
-    <div className={`relative -mx-4 ${theme.background} px-5 pb-10 shadow-lg sm:mx-0 sm:rounded-3xl sm:px-10 ${className}`}>
-      <div className={`relative -mx-5 mt-8 flex flex-col px-5 sm:mx-0 sm:rounded-2xl`}>
+    <div className={`relative ${theme.background} ${theme.border} w-full px-5 pb-10 shadow-lg mx-2 sm:rounded-3xl sm:px-4 ${className}`}>
+      <div className={`relative mt-8 flex flex-col px-5 sm:mx-0 sm:rounded-2xl`}>
         {children}
       </div>
     </div>

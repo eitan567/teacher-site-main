@@ -6,7 +6,7 @@ export const ThemedInput = ({ className = '', ...props }) => {
   
   return (
     <input 
-      className={`${theme.input} ${theme.text} text-base w-full px-3 py-2 rounded-lg ${className}`}
+      className={`${theme.input} ${theme.inputTextColor} ${theme.inputBorder} text-base w-full px-3 py-2 rounded-lg ${className} ${theme.inputPlaceholder}`}
       {...props}
     />
   );
