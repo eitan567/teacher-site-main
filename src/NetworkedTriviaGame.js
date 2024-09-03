@@ -13,25 +13,27 @@ const Timer = React.memo(({ timeLeft }) => {
   return <div className={`text-base leading-none ${theme.textSecondary} font-semibold`}>זמן נותר: {timeLeft} שניות</div>;
 });
 
-// Memoized Question Component
 const Question = React.memo(({ question, onAnswer, isCurrentPlayer, timeLeft }) => {
   const { theme } = useTheme();
   return (
     <>
-      <div className={`text-lg leading-6 font-bold ${theme.text} flex flex-col justify-center items-center h-[70px]`}>{question?.text}</div>
-      {question?.answers.map((answer, index) => (
+      <div className={`text-lg leading-6 font-bold ${theme.text} flex flex-col justify-center items-center h-[70px]`}>
+        {question?.text}
+      </div>
+      {question?.answers.map((answer) => (
         <ThemedButton
-          key={index}
-          onClick={() => onAnswer(index)}
+          key={answer.id}
+          onClick={() => onAnswer(answer.id)}
           disabled={!isCurrentPlayer || timeLeft === 0}
           className="block w-full mb-4"
         >
-          {answer}
+          {answer.text}
         </ThemedButton>
       ))}
     </>
   );
 });
+
 
 // Memoized ScoreBoard Component
 const ScoreBoard = React.memo(({ players }) => {
@@ -207,7 +209,7 @@ const NetworkedTriviaGame = () => {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    const newSocket = io('http://176.231.157.72:3001', {
+    const newSocket = io('http://84.229.242.33:3001', {
       headers: {
         "user-agent": "chrome"
       }
@@ -296,9 +298,9 @@ const NetworkedTriviaGame = () => {
     }
   }, [socket]);
 
-  const answerQuestion = useCallback((answerIndex) => {
+  const answerQuestion = useCallback((answerId) => {
     if (socket && timeLeft > 0 && currentPlayer?.id === socket?.id) {
-      socket.emit('answer', answerIndex);
+      socket.emit('answer', answerId);
     }
   }, [socket, timeLeft, currentPlayer]);
 
