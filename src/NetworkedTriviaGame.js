@@ -208,6 +208,12 @@ const NetworkedTriviaGame = () => {
 
   const timerRef = useRef(null);
 
+  const restartGame = useCallback(() => {
+    if (socket && gameCode) {
+      socket.emit('restartGame', gameCode);
+    }
+  }, [socket, gameCode]);
+
   useEffect(() => {
     const newSocket = io('http://84.229.242.33:3001', {
       headers: {
@@ -215,6 +221,14 @@ const NetworkedTriviaGame = () => {
       }
     });
     setSocket(newSocket);
+
+    newSocket.on('gameRestarted', () => {
+      setGameState('waiting');
+      setQuestion(null);
+      setTimeLeft(10);
+      setCurrentPlayer(null);
+      setPlayers(prevPlayers => prevPlayers.map(player => ({ ...player, score: 0 })));
+    });
 
     newSocket.on('gameCreated', (code) => {
       setGameCode(code);
@@ -397,7 +411,8 @@ const NetworkedTriviaGame = () => {
                   השחקן {player.name}: <span className='font-bold pr-2'>{player.score} נקודות.</span>
                 </div>
               ))}
-              <div className="mt-8">
+              <div className="mt-8 flex flex-col space-y-2">
+                <ThemedButton onClick={restartGame} className="w-full">משחק נוסף</ThemedButton>
                 <ThemedButton onClick={leaveGame} className="w-full">משחק חדש</ThemedButton>
               </div>
             </ThemedCard>
